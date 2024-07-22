@@ -3,22 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文字列ランダム並び替えとツイート</title>
+    <title>休憩報告ツイート生成器</title>
+    <link rel="stylesheet" href="styles.css">
     <script>
-        function shuffleString() {
-            const originalString = "休憩なう";
+        function shuffleAndTweet(originalString) {
             const array = originalString.split('');
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [array[i], array[j]] = [array[j], array[i]];
             }
-            document.getElementById('output').innerText = array.join('');
-        }
+            const shuffledString = array.join('');
+            const tweetContent = `${shuffledString} #休憩なう`;
 
-        function tweetString() {
-            const shuffledString = document.getElementById('output').innerText;
-            const tweetUrlApp = `twitter://post?message=${encodeURIComponent(shuffledString)}`;
-            const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shuffledString)}`;
+            const tweetUrlApp = `twitter://post?message=${encodeURIComponent(tweetContent)}`;
+            const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
 
             // Open the Twitter app if installed, otherwise fallback to web
             window.location.href = tweetUrlApp;
@@ -31,9 +29,16 @@
     </script>
 </head>
 <body>
-    <h1>文字列ランダム並び替えとツイート</h1>
-    <p id="output">休憩なう</p>
-    <button onclick="shuffleString()">ランダムに並び替える</button>
-    <button onclick="tweetString()">Twitterに上げる</button>
+    <div class="container">
+        <h1>休憩ツイート自動生成</h1>
+        <p id="output1">休憩なう</p>
+        <button onclick="shuffleAndTweet('休憩なう')">休憩を報告する</button>
+        
+        <p id="output2">お昼休憩なう</p>
+        <button onclick="shuffleAndTweet('お昼休憩なう')">お昼休憩を報告する</button>
+    </div>
+    <div class="footer">
+        &copy; 2024 pinoken_
+    </div>
 </body>
 </html>
