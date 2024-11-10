@@ -31,7 +31,7 @@
 
         function tweetPainReport() {
             const painLevel = document.getElementById("painLevelSelect").value;
-            const tweetContent = `#ピノキオピー腹痛サークル 腹痛レベル：${painLevel}`;
+            const tweetContent = `腹痛レベル：${painLevel}\n#ピノキオピー腹痛サークル`;
             
             const tweetUrlApp = `twitter://post?message=${encodeURIComponent(tweetContent)}`;
             const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
