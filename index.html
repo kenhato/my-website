@@ -28,18 +28,25 @@
         }
 
         function tweetPainReport() {
-            const tweetContent = "#ピノキオピー腹痛サークル";
+            const painLevel = prompt("腹痛のレベルは？？（1〜5の数字で入力してください）");
+            
+            // Check if the input is a number between 1 and 5
+            if (painLevel >= 1 && painLevel <= 5) {
+                const tweetContent = `#ピノキオピー腹痛サークル 腹痛レベル：${painLevel}`;
+                
+                const tweetUrlApp = `twitter://post?message=${encodeURIComponent(tweetContent)}`;
+                const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
 
-            const tweetUrlApp = `twitter://post?message=${encodeURIComponent(tweetContent)}`;
-            const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
+                // Open the Twitter app if installed, otherwise fallback to web
+                window.location.href = tweetUrlApp;
 
-            // Open the Twitter app if installed, otherwise fallback to web
-            window.location.href = tweetUrlApp;
-
-            // Fallback to web if the app doesn't open
-            setTimeout(function() {
-                window.open(tweetUrlWeb, '_blank');
-            }, 500);
+                // Fallback to web if the app doesn't open
+                setTimeout(function() {
+                    window.open(tweetUrlWeb, '_blank');
+                }, 500);
+            } else {
+                alert("1〜5の数字を入力してください。");
+            }
         }
     </script>
 </head>
