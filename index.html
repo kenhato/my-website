@@ -18,35 +18,30 @@
             const tweetUrlApp = `twitter://post?message=${encodeURIComponent(tweetContent)}`;
             const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
 
-            // Open the Twitter app if installed, otherwise fallback to web
             window.location.href = tweetUrlApp;
-
-            // Fallback to web if the app doesn't open
             setTimeout(function() {
                 window.open(tweetUrlWeb, '_blank');
             }, 500);
         }
 
+        function showPainLevelDialog() {
+            const dialog = document.getElementById("painLevelDialog");
+            dialog.showModal();
+        }
+
         function tweetPainReport() {
-            const painLevel = prompt("腹痛のレベルは？？（1〜5の数字で入力してください）");
+            const painLevel = document.getElementById("painLevelSelect").value;
+            const tweetContent = `#ピノキオピー腹痛サークル 腹痛レベル：${painLevel}`;
             
-            // Check if the input is a number between 1 and 5
-            if (painLevel >= 1 && painLevel <= 5) {
-                const tweetContent = `#ピノキオピー腹痛サークル 腹痛レベル：${painLevel}`;
-                
-                const tweetUrlApp = `twitter://post?message=${encodeURIComponent(tweetContent)}`;
-                const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
+            const tweetUrlApp = `twitter://post?message=${encodeURIComponent(tweetContent)}`;
+            const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
 
-                // Open the Twitter app if installed, otherwise fallback to web
-                window.location.href = tweetUrlApp;
+            window.location.href = tweetUrlApp;
+            setTimeout(function() {
+                window.open(tweetUrlWeb, '_blank');
+            }, 500);
 
-                // Fallback to web if the app doesn't open
-                setTimeout(function() {
-                    window.open(tweetUrlWeb, '_blank');
-                }, 500);
-            } else {
-                alert("1〜5の数字を入力してください。");
-            }
+            document.getElementById("painLevelDialog").close();
         }
     </script>
 </head>
@@ -60,8 +55,25 @@
         <button onclick="shuffleAndTweet('お昼休憩なう')">お昼休憩を報告する</button>
         
         <p id="output3">腹痛なう</p>
-        <button onclick="tweetPainReport()">腹痛を報告する</button>
+        <button onclick="showPainLevelDialog()">腹痛を報告する</button>
     </div>
+
+    <!-- ポップアップダイアログ -->
+    <dialog id="painLevelDialog">
+        <form method="dialog">
+            <label for="painLevelSelect">腹痛のレベルは？？</label>
+            <select id="painLevelSelect">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <button type="button" onclick="tweetPainReport()">ツイートする</button>
+            <button type="button" onclick="document.getElementById('painLevelDialog').close()">キャンセル</button>
+        </form>
+    </dialog>
+
     <div class="footer">
         &copy; 2024 pinoken_
     </div>
