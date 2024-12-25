@@ -39,22 +39,20 @@
             dialog.showModal();
         }
 
-        function tweetAppleMusic() {
+        function openMiddlePage() {
             const musicUrl = document.getElementById("appleMusicUrl").value;
             if (!musicUrl || !musicUrl.includes("music.apple.com")) {
                 alert("有効なApple MusicのURLを入力してください！");
                 return;
             }
 
-            // 中継ページのリンクを生成
+            // 中継ページのURLを生成
             const middlePageUrl = `https://username.github.io/index2.html?musicUrl=${encodeURIComponent(musicUrl)}`;
-            const tweetContent = `この曲をチェックしてね！ 🎵\n${middlePageUrl}`;
 
-            const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
-            window.open(tweetUrlWeb, '_blank');
-
-            document.getElementById("appleMusicDialog").close();
+            // 中継ページに遷移
+            window.location.href = middlePageUrl;
         }
+
     </script>
 </head>
 <body>
