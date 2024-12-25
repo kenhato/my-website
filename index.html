@@ -15,13 +15,8 @@
             const shuffledString = array.join('');
             const tweetContent = `${shuffledString} #休憩なう`;
 
-            const tweetUrlApp = `twitter://post?message=${encodeURIComponent(tweetContent)}`;
             const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
-
-            window.location.href = tweetUrlApp;
-            setTimeout(function() {
-                window.open(tweetUrlWeb, '_blank');
-            }, 500);
+            window.open(tweetUrlWeb, '_blank');
         }
 
         function showPainLevelDialog() {
@@ -33,13 +28,8 @@
             const painLevel = document.getElementById("painLevelSelect").value;
             const tweetContent = `腹痛レベル：${painLevel}\n#ピノキオピー腹痛サークル`;
             
-            const tweetUrlApp = `twitter://post?message=${encodeURIComponent(tweetContent)}`;
             const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
-
-            window.location.href = tweetUrlApp;
-            setTimeout(function() {
-                window.open(tweetUrlWeb, '_blank');
-            }, 500);
+            window.open(tweetUrlWeb, '_blank');
 
             document.getElementById("painLevelDialog").close();
         }
@@ -56,15 +46,12 @@
                 return;
             }
 
-            const tweetContent = `この曲をチェックしてね！ 🎵\n${musicUrl}`;
+            // 中継ページのリンクを生成
+            const middlePageUrl = `https://username.github.io/index2.html?musicUrl=${encodeURIComponent(musicUrl)}`;
+            const tweetContent = `この曲をチェックしてね！ 🎵\n${middlePageUrl}`;
 
-            const tweetUrlApp = `twitter://post?message=${encodeURIComponent(tweetContent)}`;
             const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
-
-            window.location.href = tweetUrlApp;
-            setTimeout(function() {
-                window.open(tweetUrlWeb, '_blank');
-            }, 500);
+            window.open(tweetUrlWeb, '_blank');
 
             document.getElementById("appleMusicDialog").close();
         }
