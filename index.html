@@ -43,6 +43,31 @@
 
             document.getElementById("painLevelDialog").close();
         }
+
+        function showAppleMusicDialog() {
+            const dialog = document.getElementById("appleMusicDialog");
+            dialog.showModal();
+        }
+
+        function tweetAppleMusic() {
+            const musicUrl = document.getElementById("appleMusicUrl").value;
+            if (!musicUrl || !musicUrl.includes("music.apple.com")) {
+                alert("有効なApple MusicのURLを入力してください！");
+                return;
+            }
+
+            const tweetContent = `この曲をチェックしてね！ 🎵\n${musicUrl}`;
+
+            const tweetUrlApp = `twitter://post?message=${encodeURIComponent(tweetContent)}`;
+            const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
+
+            window.location.href = tweetUrlApp;
+            setTimeout(function() {
+                window.open(tweetUrlWeb, '_blank');
+            }, 500);
+
+            document.getElementById("appleMusicDialog").close();
+        }
     </script>
 </head>
 <body>
@@ -54,15 +79,17 @@
         <p id="output2">お昼休憩なう</p>
         <button onclick="shuffleAndTweet('お昼休憩なう')">お昼休憩を報告する</button>
         
-        <!-- 夜休憩なうを追加 -->
         <p id="output3">夜休憩なう</p>
         <button onclick="shuffleAndTweet('夜休憩なう')">夜休憩を報告する</button>
 
         <p id="output4">腹痛なう</p>
         <button onclick="showPainLevelDialog()">腹痛を報告する</button>
+
+        <p id="output5">Apple Music URL</p>
+        <button onclick="showAppleMusicDialog()">Apple Music URLをツイートする</button>
     </div>
 
-    <!-- ポップアップダイアログ -->
+    <!-- 腹痛報告用ダイアログ -->
     <dialog id="painLevelDialog">
         <form method="dialog">
             <label for="painLevelSelect">腹痛のレベルは？？</label>
@@ -78,9 +105,18 @@
         </form>
     </dialog>
 
+    <!-- Apple Music報告用ダイアログ -->
+    <dialog id="appleMusicDialog">
+        <form method="dialog">
+            <label for="appleMusicUrl">Apple MusicのURLを入力:</label>
+            <input type="text" id="appleMusicUrl" placeholder="https://music.apple.com/">
+            <button type="button" onclick="tweetAppleMusic()">ツイートする</button>
+            <button type="button" onclick="document.getElementById('appleMusicDialog').close()">キャンセル</button>
+        </form>
+    </dialog>
+
     <div class="footer">
         &copy; 2024 pinoken_
     </div>
 </body>
 </html>
-
