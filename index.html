@@ -16,7 +16,8 @@
             const tweetContent = `${shuffledString} #休憩なう`;
 
             const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
-            window.open(tweetUrlWeb, '_blank');
+            // 現在のタブで遷移する
+            window.location.href = tweetUrlWeb;
         }
 
         function showPainLevelDialog() {
@@ -27,9 +28,10 @@
         function tweetPainReport() {
             const painLevel = document.getElementById("painLevelSelect").value;
             const tweetContent = `腹痛レベル：${painLevel}\n#ピノキオピー腹痛サークル`;
-            
+
             const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
-            window.open(tweetUrlWeb, '_blank');
+            // 現在のタブで遷移する
+            window.location.href = tweetUrlWeb;
 
             document.getElementById("painLevelDialog").close();
         }
@@ -47,8 +49,8 @@
                     const tweetContent = `#Nowplaying\n${fixedUrl}`;
                     const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
 
-                    // ツイート画面を開く
-                    window.open(tweetUrlWeb, '_blank');
+                    // 現在のタブで遷移する
+                    window.location.href = tweetUrlWeb;
                 })
                 .catch(err => {
                     alert("クリップボードの内容を取得できませんでした。コピーされているか確認してください！");
@@ -62,10 +64,10 @@
         <h1>休憩ツイート自動生成</h1>
         <p id="output1">休憩なう</p>
         <button onclick="shuffleAndTweet('休憩なう')">休憩を報告する</button>
-        
+
         <p id="output2">お昼休憩なう</p>
         <button onclick="shuffleAndTweet('お昼休憩なう')">お昼休憩を報告する</button>
-        
+
         <p id="output3">夜休憩なう</p>
         <button onclick="shuffleAndTweet('夜休憩なう')">夜休憩を報告する</button>
 
