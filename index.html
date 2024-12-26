@@ -34,25 +34,27 @@
             document.getElementById("painLevelDialog").close();
         }
 
-        function showAppleMusicDialog() {
-            const dialog = document.getElementById("appleMusicDialog");
-            dialog.showModal();
+        function tweetAppleMusicFromClipboard() {
+            navigator.clipboard.readText()
+                .then(originalUrl => {
+                    if (!originalUrl || !originalUrl.includes("music.apple.com")) {
+                        alert("Apple MusicのURLをコピーしてください！");
+                        return;
+                    }
+
+                    // URLを修正
+                    const fixedUrl = originalUrl.replace("?i=", "?&i=");
+                    const tweetContent = `この曲をチェックしてね！ 🎵\n${fixedUrl}`;
+                    const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
+
+                    // ツイート画面を開く
+                    window.open(tweetUrlWeb, '_blank');
+                })
+                .catch(err => {
+                    alert("クリップボードの内容を取得できませんでした。コピーされているか確認してください！");
+                    console.error(err);
+                });
         }
-
-        function openMiddlePage() {
-            const musicUrl = document.getElementById("appleMusicUrl").value;
-            if (!musicUrl || !musicUrl.includes("music.apple.com")) {
-                alert("有効なApple MusicのURLを入力してください！");
-                return;
-            }
-
-            // 中継ページのURLを生成
-            const middlePageUrl = `https://kenhato.github.io/my-website/index2.html?musicUrl=${encodeURIComponent(musicUrl)}`;
-
-            // 中継ページに遷移
-            window.location.href = middlePageUrl;
-        }
-
     </script>
 </head>
 <body>
@@ -71,7 +73,7 @@
         <button onclick="showPainLevelDialog()">腹痛を報告する</button>
 
         <p id="output5">Apple Music URL</p>
-        <button onclick="showAppleMusicDialog()">Apple Music URLをツイートする</button>
+        <button onclick="tweetAppleMusicFromClipboard()">Apple Music URLをツイートする</button>
     </div>
 
     <!-- 腹痛報告用ダイアログ -->
@@ -87,16 +89,6 @@
             </select>
             <button type="button" onclick="tweetPainReport()">ツイートする</button>
             <button type="button" onclick="document.getElementById('painLevelDialog').close()">キャンセル</button>
-        </form>
-    </dialog>
-
-    <!-- Apple Music報告用ダイアログ -->
-    <dialog id="appleMusicDialog">
-        <form method="dialog">
-            <label for="appleMusicUrl">Apple MusicのURLを入力:</label>
-            <input type="text" id="appleMusicUrl" placeholder="https://music.apple.com/">
-            <button type="button" onclick="openMiddlePage()">ツイートする</button>
-            <button type="button" onclick="document.getElementById('appleMusicDialog').close()">キャンセル</button>
         </form>
     </dialog>
 
