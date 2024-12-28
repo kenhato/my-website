@@ -3,9 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>休憩報告ツイート生成器</title>
+    <title>ツイート生成器</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://js-cdn.music.apple.com/musickit/v3/musickit.js"></script>
     <script>
+        // MusicKit初期化
+        document.addEventListener('DOMContentLoaded', () => {
+            MusicKit.configure({
+                developerToken: "eyJhbGciOiJFUzI1NiIsImtpZCI6Iks5NUNMUkdLMzYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiI4V1czTlFQN0FWIiwiaWF0IjoxNzM1MzQ3ODc0LCJleHAiOjE3NTA4OTk4NzQsImF1ZCI6Imh0dHBzOi8vYXBwbGVpZC5hcHBsZS5jb20ifQ.4GG2np7uOmgW4e1HRoFPV_jy1rPpxD_MqP1P2DFJj9jyzkDJfGVNFtv8DOFlzt4HDo-a0df-LyaW3YPwtLFqDQ", // JWTトークンをここに設定
+                app: {
+                    name: "TweetGenerator",
+                    build: "1.0.0"
+                }
+            });
+        });
+
+        // 文字をシャッフルしてツイート
         function shuffleAndTweet(originalString) {
             const array = originalString.split('');
             for (let i = array.length - 1; i > 0; i--) {
@@ -16,10 +29,10 @@
             const tweetContent = `${shuffledString} #休憩なう`;
 
             const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
-            // 現在のタブで遷移する
             window.location.href = tweetUrlWeb;
         }
 
+        // 腹痛レベルツイート
         function showPainLevelDialog() {
             const dialog = document.getElementById("painLevelDialog");
             dialog.showModal();
@@ -30,12 +43,38 @@
             const tweetContent = `腹痛レベル：${painLevel}\n#ピノキオピー腹痛サークル`;
 
             const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
-            // 現在のタブで遷移する
             window.location.href = tweetUrlWeb;
 
             document.getElementById("painLevelDialog").close();
         }
 
+        // Apple Musicの再生中の曲を取得してツイート
+        async function tweetNowPlaying() {
+            const music = MusicKit.getInstance();
+
+            try {
+                await music.authorize(); // ユーザー認証
+
+                const nowPlaying = music.player.nowPlayingItem;
+                if (!nowPlaying) {
+                    alert("現在再生中の曲がありません！");
+                    return;
+                }
+
+                const songTitle = nowPlaying.title;
+                const artistName = nowPlaying.artistName;
+                const url = nowPlaying.url || "https://music.apple.com/";
+
+                const tweetContent = `#Nowplaying ${songTitle} by ${artistName}\n${url}`;
+                const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
+                window.location.href = tweetUrlWeb;
+            } catch (err) {
+                alert("Apple Musicの認証に失敗しました。");
+                console.error(err);
+            }
+        }
+
+        // クリップボードのApple Music URLをツイート
         function tweetAppleMusicFromClipboard() {
             navigator.clipboard.readText()
                 .then(originalUrl => {
@@ -44,12 +83,9 @@
                         return;
                     }
 
-                    // URLを修正
                     const fixedUrl = originalUrl.replace("?i=", "?&i=");
                     const tweetContent = `#Nowplaying\n${fixedUrl}`;
                     const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
-
-                    // 現在のタブで遷移する
                     window.location.href = tweetUrlWeb;
                 })
                 .catch(err => {
@@ -61,21 +97,22 @@
 </head>
 <body>
     <div class="container">
-        <h1>休憩ツイート自動生成</h1>
-        <p id="output1">休憩なう</p>
+        <h1>ツイート生成器</h1>
+
+        <!-- シャッフルツイート -->
+        <p>休憩ツイート</p>
         <button onclick="shuffleAndTweet('休憩なう')">休憩を報告する</button>
-
-        <p id="output2">お昼休憩なう</p>
         <button onclick="shuffleAndTweet('お昼休憩なう')">お昼休憩を報告する</button>
-
-        <p id="output3">夜休憩なう</p>
         <button onclick="shuffleAndTweet('夜休憩なう')">夜休憩を報告する</button>
 
-        <p id="output4">腹痛なう</p>
+        <!-- 腹痛ツイート -->
+        <p>腹痛ツイート</p>
         <button onclick="showPainLevelDialog()">腹痛を報告する</button>
 
-        <p id="output5">なうぷれ</p>
-        <button onclick="tweetAppleMusicFromClipboard()">なうぷれをツイートする</button>
+        <!-- なうぷれ -->
+        <p>なうぷれ</p>
+        <button onclick="tweetNowPlaying()">現在再生中の曲をツイート</button>
+        <button onclick="tweetAppleMusicFromClipboard()">クリップボードのURLをツイート</button>
     </div>
 
     <!-- 腹痛報告用ダイアログ -->
