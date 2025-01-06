@@ -1,18 +1,32 @@
 document.addEventListener('DOMContentLoaded', async () => {
-
     // ボタンクリックのイベント設定
     document.getElementById('shuffleButton1').addEventListener('click', () => shuffleAndTweet('休憩なう'));
     document.getElementById('shuffleButton2').addEventListener('click', () => shuffleAndTweet('お昼休憩なう'));
     document.getElementById('shuffleButton3').addEventListener('click', () => shuffleAndTweet('夜休憩なう'));
     document.getElementById('painLevelButton').addEventListener('click', showPainLevelDialog);
     document.getElementById('nowPlayingButton').addEventListener('click', tweetNowPlaying);
-    document.getElementById('clipboardButton').addEventListener('click', tweetAppleMusicFromClipboard);
 
     // ダイアログ内ボタンのイベント設定
     document.getElementById('tweetPainButton').addEventListener('click', tweetPainReport);
     document.getElementById('cancelPainButton').addEventListener('click', () => {
         document.getElementById('painLevelDialog').close();
     });
+
+    // MusicKit初期化
+    try {
+        console.log("MusicKit初期化を開始...");
+        await MusicKit.configure({
+            developerToken: "eyJhbGciOiJFUzI1NiIsImtpZCI6IjNVOTVKVzdKVkIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiI4V1czTlFQN0FWIiwiaWF0IjoxNzM1NzY1MzU2LCJleHAiOjE3NTEzMTczNTYsImF1ZCI6Imh0dHBzOi8vYXBwbGVpZC5hcHBsZS5jb20iLCJzdWIiOiJhcHBsZW11c2ljLmFwaS51c2UuY29tIn0.UO2paC2WnXqtvy0lr3GOl0wdAyo2nULajrCPYtH-hJLp7QOeVRuUaORRHIJVUPUvoQbIIoXBRvxnMRTtBSC9Gw", // トークンを設定
+            app: {
+                name: "TweetGenerator",
+                build: "1.0.0"
+            }
+        });
+        console.log("MusicKit初期化成功！");
+    } catch (error) {
+        console.error("MusicKit初期化中にエラー:", error);
+    }
+});
 
 // 文字をシャッフルしてツイート
 function shuffleAndTweet(originalString) {
@@ -44,20 +58,6 @@ function tweetPainReport() {
     document.getElementById("painLevelDialog").close();
 }
 
- // MusicKit初期化
- MusicKit.configure({
-    developerToken: "eyJhbGciOiJFUzI1NiIsImtpZCI6Iks5NUNMUkdLMzYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiI4V1czTlFQN0FWIiwiaWF0IjoxNzM1MzQ3ODc0LCJleHAiOjE3NTA4OTk4NzQsImF1ZCI6Imh0dHBzOi8vYXBwbGVpZC5hcHBsZS5jb20ifQ.4GG2np7uOmgW4e1HRoFPV_jy1rPpxD_MqP1P2DFJj9jyzkDJfGVNFtv8DOFlzt4HDo-a0df-LyaW3YPwtLFqDQ", // JWTトークンをここに設定
-    app: {
-        name: "TweetGenerator",
-        build: "1.0.0"
-    }
-});
-
-// 初期化されたインスタンスをログに出力
-console.log("MusicKitインスタンス:", music);
-console.log("使用中のトークン:", music.developerToken);
-});
-
 // Apple Musicの再生中の曲を取得してツイート
 async function tweetNowPlaying() {
     const music = MusicKit.getInstance();
@@ -65,7 +65,7 @@ async function tweetNowPlaying() {
     try {
         // ユーザー認証
         console.log("認証開始...");
-        await music.authorize(); 
+        await music.authorize();
         console.log("認証成功！");
 
         // 再生中の曲を取得
@@ -100,4 +100,6 @@ async function tweetNowPlaying() {
         }
     }
 }
+
+
 
