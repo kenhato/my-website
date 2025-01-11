@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         console.log("MusicKit初期化を開始...");
         await MusicKit.configure({
-            developerToken: "eyJhbGciOiJFUzI1NiIsImtpZCI6IjNVOTVKVzdKVkIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiI4V1czTlFQN0FWIiwiaWF0IjoxNzM1NzY1MzU2LCJleHAiOjE3NTEzMTczNTYsImF1ZCI6Imh0dHBzOi8vYXBwbGVpZC5hcHBsZS5jb20iLCJzdWIiOiJhcHBsZW11c2ljLmFwaS51c2UuY29tIn0.UO2paC2WnXqtvy0lr3GOl0wdAyo2nULajrCPYtH-hJLp7QOeVRuUaORRHIJVUPUvoQbIIoXBRvxnMRTtBSC9Gw", // トークンを設定
+            developerToken: "eyJhbGciOiJFUzI1NiIsImtpZCI6IjNVOTVKVzdKVkIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiI4V1czTlFQN0FWIiwiaWF0IjoxNzM2MDQ0MTA0LCJleHAiOjE3NTE1OTYxMDQsImF1ZCI6Imh0dHBzOi8vYXBwbGVpZC5hcHBsZS5jb20iLCJzdWIiOiJhcHBsZW11c2ljLmFwaS51c2UuY29tIn0.yYzaph2DuU9_V62v2D2-2hzxmYuB2m_7DO5zq4ljPSrNEZlH51FZgmxu9Y5l_Q_ALeC2DIaDXiiUjvkeskFfpw", // トークンを設定
             app: {
                 name: "TweetGenerator",
                 build: "1.0.0"
@@ -65,21 +65,21 @@ async function tweetNowPlaying() {
     try {
         // ユーザー認証
         console.log("認証開始...");
-        await music.authorize();
-        console.log("認証成功！");
+        const musicUserToken = await music.authorize();
+        console.log("認証成功！Music User Token:", musicUserToken);
 
         // 再生中の曲を取得
         const nowPlaying = music.player.nowPlayingItem;
         console.log("現在再生中の曲情報:", nowPlaying);
 
         if (!nowPlaying) {
-            alert("現在再生中の曲がありません！");
+            alert("現在再生中の曲がありません！再生中の曲を確認してください。");
             return;
         }
 
         // 曲情報をツイート内容に設定
-        const songTitle = nowPlaying.title;
-        const artistName = nowPlaying.artistName;
+        const songTitle = nowPlaying.title || "Unknown Title";
+        const artistName = nowPlaying.artistName || "Unknown Artist";
         const url = nowPlaying.url || "https://music.apple.com/";
 
         const tweetContent = `#Nowplaying ${songTitle} by ${artistName}\n${url}`;
@@ -90,16 +90,19 @@ async function tweetNowPlaying() {
         window.location.href = tweetUrlWeb;
     } catch (err) {
         // エラーをキャッチして詳細をログに出力
-        console.error("認証エラー:", err);
+        console.error("認証エラーまたは曲情報取得エラー:", err);
 
         // エラー内容に応じて適切なメッセージを表示
         if (err.name === "AUTHORIZATION_ERROR") {
-            alert("認証エラーが発生しました。トークンを確認してください。");
+            alert("認証エラーが発生しました。再度ログインしてください。");
+        } else if (err.message && err.message.includes("Cannot read properties of null")) {
+            alert("再生中の曲情報が取得できませんでした。曲が再生されているか確認してください。");
         } else {
-            alert("Apple Musicの認証に失敗しました。");
+            alert("Apple Musicの認証またはデータ取得に失敗しました。");
         }
     }
 }
+
 
 
 
