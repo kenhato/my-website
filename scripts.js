@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         console.log("MusicKit初期化を開始...");
         await MusicKit.configure({
-            developerToken: "eyJhbGciOiJFUzI1NiIsImtpZCI6IjNVOTVKVzdKVkIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiI4V1czTlFQN0FWIiwiaWF0IjoxNzM2MDQ0MTA0LCJleHAiOjE3NTE1OTYxMDQsImF1ZCI6Imh0dHBzOi8vYXBwbGVpZC5hcHBsZS5jb20iLCJzdWIiOiJhcHBsZW11c2ljLmFwaS51c2UuY29tIn0.yYzaph2DuU9_V62v2D2-2hzxmYuB2m_7DO5zq4ljPSrNEZlH51FZgmxu9Y5l_Q_ALeC2DIaDXiiUjvkeskFfpw", // トークンを設定
+            developerToken: "eyJhbGciOiJFUzI1NiIsImtpZCI6IlE1UUNSOExROUYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiI4V1czTlFQN0FWIiwiZXhwIjoxNzM2NjQ1NTU2LCJpYXQiOjE3MzY2MDIzNTZ9.Mzn4EwmkYZ21OeqAUL6y12WEL3zOVNHqMqJhK_LZX1MAEYt2JEx0yaNwolCCmcR58n_Cvl6jcRzAByGJ6hyVCw", // トークンを設定
             app: {
                 name: "TweetGenerator",
                 build: "1.0.0"
