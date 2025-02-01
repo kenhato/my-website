@@ -71,7 +71,7 @@ async function tweetNowPlaying() {
         const nowPlaying = await fetchNowPlayingSong(musicUserToken);
 
         if (!nowPlaying) {
-            alert("現在再生中の曲がありません！");;
+            alert("現在再生中の曲がありません！");
             return;
         }
 
