@@ -63,61 +63,32 @@ async function tweetNowPlaying() {
     const music = MusicKit.getInstance();
 
     try {
-        // ユーザー認証
         console.log("認証開始...");
         const musicUserToken = await music.authorize();
         console.log("認証成功！Music User Token:", musicUserToken);
 
-        // 再生中の曲を取得
-        const nowPlaying = music.player.nowPlayingItem;
-        // 再生中の曲を取得（ロードされるのを待つ）
-        let nowPlaying = music.player.nowPlayingItem;
-        
-        if (!nowPlaying) {
-            console.log("曲の情報がまだ取得できないので、再生イベントを待機...");
-            await new Promise((resolve) => {
-                music.player.addEventListener("playbackStateDidChange", () => {
-                    if (music.player.nowPlayingItem) {
-                        console.log("再生中の曲が取得できた！");
-                        resolve();
-                    }
-                });
-            });
-            nowPlaying = music.player.nowPlayingItem;
-        }
-
-        console.log("現在再生中の曲情報:", nowPlaying);
+        // Apple Music API を使って曲情報を取得
+        const nowPlaying = await fetchNowPlayingSong(musicUserToken);
 
         if (!nowPlaying) {
-            alert("現在再生中の曲がありません！再生中の曲を確認してください。");
+            alert("現在再生中の曲がありません！");
             return;
         }
 
-        // 曲情報をツイート内容に設定
-        const songTitle = nowPlaying.attributes?.name || "Unknown Title";
-        const artistName = nowPlaying.attributes?.artistName || "Unknown Artist";
-        const url = nowPlaying.attributes?.url || "https://music.apple.com/";
+        console.log("取得した曲情報:", nowPlaying);
 
-        const tweetContent = `#Nowplaying ${songTitle} by ${artistName}\n${url}`;
+        const tweetContent = `#Nowplaying ${nowPlaying.title} by ${nowPlaying.artist}\n${nowPlaying.url}`;
         const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
         console.log("ツイート内容:", tweetContent);
 
         // ツイートページにリダイレクト
         window.location.href = tweetUrlWeb;
     } catch (err) {
-        // エラーをキャッチして詳細をログに出力
         console.error("認証エラーまたは曲情報取得エラー:", err);
-
-        // エラー内容に応じて適切なメッセージを表示
-        if (err.name === "AUTHORIZATION_ERROR") {
-            alert("認証エラーが発生しました。再度ログインしてください。");
-        } else if (err.message && err.message.includes("Cannot read properties of null")) {
-            alert("再生中の曲情報が取得できませんでした。曲が再生されているか確認してください。");
-        } else {
-            alert("Apple Musicの認証またはデータ取得に失敗しました。");
-        }
+        alert("Apple Music の認証またはデータ取得に失敗しました。");
     }
 }
+
 
 
 
