@@ -58,10 +58,10 @@ function tweetPainReport() {
     document.getElementById("painLevelDialog").close();
 }
 
-//  まず最初に Apple Music API から曲を取得する関数を定義
+// Apple Music API から曲を取得する関数
 async function fetchNowPlayingSong(musicUserToken) {
-    const music = MusicKit.getInstance(); // ← ここで `MusicKit` のインスタンスを取得！
-    const developerToken = music.developerToken; // ← ここに自分の開発者トークンを入れる！
+    const music = MusicKit.getInstance(); // MusicKitインスタンス取得
+    const developerToken = music.developerToken; 
 
     try {
         const response = await fetch("https://api.music.apple.com/v1/me/recent/played/tracks?limit=1", {
@@ -77,7 +77,6 @@ async function fetchNowPlayingSong(musicUserToken) {
         }
 
         const data = await response.json();
-        console.log("APIから取得した曲情報:", data);
 
         // 直近に再生した曲の情報を取得
         const nowPlaying = data.data?.[0]?.attributes;
@@ -99,14 +98,12 @@ async function fetchNowPlayingSong(musicUserToken) {
     }
 }
 
-//  その後に `tweetNowPlaying()` を定義
+// 認証⇒fetchNowPlayingSongから取得した曲をツイートする関数
 async function tweetNowPlaying() {
     const music = MusicKit.getInstance();
 
     try {
-        console.log("認証開始...");
         const musicUserToken = await music.authorize();
-        console.log("認証成功！Music User Token:", musicUserToken);
 
         // Apple Music API を使って曲情報を取得
         const nowPlaying = await fetchNowPlayingSong(musicUserToken);
@@ -115,8 +112,6 @@ async function tweetNowPlaying() {
             alert("現在再生中の曲がありません！");
             return;
         }
-
-        console.log("取得した曲情報:", nowPlaying);
 
          // `?i=` を `?&i=` に変換
          const fixedUrl = nowPlaying.url.replace("?i=", "?&i=");
