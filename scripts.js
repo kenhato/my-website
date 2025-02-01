@@ -64,11 +64,12 @@ async function fetchNowPlayingSong(musicUserToken) {
     const developerToken = music.developerToken; 
 
     try {
-        const response = await fetch(`https://api.music.apple.com/v1/me/recent/played/tracks?limit=1&nocache=${Date.now()}`, {
+        const response = await fetch("https://api.music.apple.com/v1/me/recent/played/tracks?limit=1", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${developerToken}`,
-                "Music-User-Token": musicUserToken
+                "Music-User-Token": musicUserToken,
+                "Cache-Control": "no-cache"
             }
         });
 
