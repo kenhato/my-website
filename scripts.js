@@ -60,6 +60,7 @@ function tweetPainReport() {
 
 //  まず最初に Apple Music API から曲を取得する関数を定義
 async function fetchNowPlayingSong(musicUserToken) {
+    const music = MusicKit.getInstance(); // ← ここで `MusicKit` のインスタンスを取得！
     const developerToken = music.developerToken; // ← ここに自分の開発者トークンを入れる！
 
     try {
