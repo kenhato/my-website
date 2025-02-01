@@ -59,45 +59,27 @@ function tweetPainReport() {
 }
 
 //  まず最初に Apple Music API から曲を取得する関数を定義
-async function fetchNowPlayingSong(musicUserToken) {
-    const music = MusicKit.getInstance(); // ← ここで `MusicKit` のインスタンスを取得！
-    const developerToken = music.developerToken; // ← ここに自分の開発者トークンを入れる！
+async function fetchNowPlayingSong() {
+    const music = MusicKit.getInstance();
 
-    try {
-        const response = await fetch("https://api.music.apple.com/v1/me/recent/played", {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${developerToken}`,
-                "Music-User-Token": musicUserToken
-            }
-        });
+    // ✅ まず、現在再生中の曲を取得
+    const nowPlaying = music.player.nowPlayingItem;
 
-        if (!response.ok) {
-            throw new Error(`APIエラー: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log("APIから取得した曲情報:", data);
-
-        // 直近に再生した曲の情報を取得
-        const nowPlaying = data.data?.[0]?.attributes;
-        if (!nowPlaying) {
-            alert("現在再生中の曲が取得できませんでした。");
-            return null;
-        }
-
-        return {
-            title: nowPlaying.name || "Unknown Title",
-            artist: nowPlaying.artistName || "Unknown Artist",
-            url: nowPlaying.url || "https://music.apple.com/"
-        };
-
-    } catch (error) {
-        console.error("曲情報取得エラー:", error);
-        alert("曲情報の取得に失敗しました。");
+    if (!nowPlaying) {
+        console.error("現在再生中の曲がありません！");
+        alert("現在再生中の曲がありません！Apple Music で曲を再生してください。");
         return null;
     }
+
+    console.log("現在再生中の曲:", nowPlaying);
+
+    return {
+        title: nowPlaying.attributes?.name || "Unknown Title",
+        artist: nowPlaying.attributes?.artistName || "Unknown Artist",
+        url: nowPlaying.attributes?.url || "https://music.apple.com/"
+    };
 }
+
 
 //  その後に `tweetNowPlaying()` を定義
 async function tweetNowPlaying() {
