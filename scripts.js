@@ -66,7 +66,7 @@ async function fetchNowPlayingSong() {
     const music = MusicKit.getInstance();
 
     // ✅ まず、現在再生中の曲を取得
-    const nowPlaying = music.nowPlayingItem;
+    const nowPlaying = music.player.nowPlayingItem;
 
     if (!nowPlaying) {
         console.error("現在再生中の曲がありません！");
