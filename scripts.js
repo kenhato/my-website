@@ -86,6 +86,9 @@ async function fetchNowPlayingSong(musicUserToken) {
             return null;
         }
 
+        // `?i=` を `?&i=` に変換
+        const fixedUrl = nowPlaying.url.replace("?i=", "?&i=");
+        
         return {
             title: nowPlaying.name || "Unknown Title",
             artist: nowPlaying.artistName || "Unknown Artist",
