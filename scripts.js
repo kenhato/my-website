@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             app: {
                 name: "TweetGenerator",
                 build: "1.0.0"
+            },
+            playback: {
+                autoplay: false // ✅ ここで `player` を有効にする！
             }
         });
         console.log("MusicKit初期化成功！");
@@ -63,7 +66,7 @@ async function fetchNowPlayingSong() {
     const music = MusicKit.getInstance();
 
     // ✅ まず、現在再生中の曲を取得
-    const nowPlaying = music.player.nowPlayingItem;
+    const nowPlaying = music.nowPlayingItem;
 
     if (!nowPlaying) {
         console.error("現在再生中の曲がありません！");
