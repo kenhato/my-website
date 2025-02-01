@@ -64,7 +64,7 @@ async function fetchNowPlayingSong(musicUserToken) {
     const developerToken = music.developerToken; // ← ここに自分の開発者トークンを入れる！
 
     try {
-        const response = await fetch("https://api.music.apple.com/v1/me/recent/played", {
+        const response = await fetch("https://api.music.apple.com/v1/me/recent/played/tracks", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${developerToken}`,
