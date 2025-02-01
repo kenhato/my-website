@@ -86,9 +86,6 @@ async function fetchNowPlayingSong(musicUserToken) {
             return null;
         }
 
-        // `?i=` を `?&i=` に変換
-        const fixedUrl = nowPlaying.url.replace("?i=", "?&i=");
-
         return {
             title: nowPlaying.name || "Unknown Title",
             artist: nowPlaying.artistName || "Unknown Artist",
@@ -121,7 +118,10 @@ async function tweetNowPlaying() {
 
         console.log("取得した曲情報:", nowPlaying);
 
-        const tweetContent = `#Nowplaying ${nowPlaying.title} by ${nowPlaying.artist}\n${nowPlaying.url}`;
+         // `?i=` を `?&i=` に変換
+         const fixedUrl = nowPlaying.url.replace("?i=", "?&i=");
+
+        const tweetContent = `#Nowplaying ${nowPlaying.title} by ${nowPlaying.artist}\n${fixedUrl}`;
         const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
         console.log("ツイート内容:", tweetContent);
 
