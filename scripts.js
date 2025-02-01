@@ -70,6 +70,22 @@ async function tweetNowPlaying() {
 
         // 再生中の曲を取得
         const nowPlaying = music.player.nowPlayingItem;
+        // 再生中の曲を取得（ロードされるのを待つ）
+        let nowPlaying = music.player.nowPlayingItem;
+        
+        if (!nowPlaying) {
+            console.log("曲の情報がまだ取得できないので、再生イベントを待機...");
+            await new Promise((resolve) => {
+                music.player.addEventListener("playbackStateDidChange", () => {
+                    if (music.player.nowPlayingItem) {
+                        console.log("再生中の曲が取得できた！");
+                        resolve();
+                    }
+                });
+            });
+            nowPlaying = music.player.nowPlayingItem;
+        }
+
         console.log("現在再生中の曲情報:", nowPlaying);
 
         if (!nowPlaying) {
@@ -78,9 +94,9 @@ async function tweetNowPlaying() {
         }
 
         // 曲情報をツイート内容に設定
-        const songTitle = nowPlaying.title || "Unknown Title";
-        const artistName = nowPlaying.artistName || "Unknown Artist";
-        const url = nowPlaying.url || "https://music.apple.com/";
+        const songTitle = nowPlaying.attributes?.name || "Unknown Title";
+        const artistName = nowPlaying.attributes?.artistName || "Unknown Artist";
+        const url = nowPlaying.attributes?.url || "https://music.apple.com/";
 
         const tweetContent = `#Nowplaying ${songTitle} by ${artistName}\n${url}`;
         const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
@@ -102,6 +118,9 @@ async function tweetNowPlaying() {
         }
     }
 }
+
+
+
 
 
 
