@@ -64,7 +64,7 @@ async function fetchNowPlayingSong(musicUserToken) {
     const developerToken = music.developerToken; // ← ここに自分の開発者トークンを入れる！
 
     try {
-        const response = await fetch("https://api.music.apple.com/v1/me/recent/played/tracks", {
+        const response = await fetch("https://api.music.apple.com/v1/me/recent/played/tracks?limit=1", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${developerToken}`,
@@ -88,7 +88,7 @@ async function fetchNowPlayingSong(musicUserToken) {
 
         // `?i=` を `?&i=` に変換
         const fixedUrl = nowPlaying.url.replace("?i=", "?&i=");
-        
+
         return {
             title: nowPlaying.name || "Unknown Title",
             artist: nowPlaying.artistName || "Unknown Artist",
