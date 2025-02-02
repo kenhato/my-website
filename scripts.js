@@ -117,7 +117,7 @@ async function tweetNowPlaying() {
          // `?i=` を `?&i=` に変換
          const fixedUrl = nowPlaying.url.replace("?i=", "?&i=");
 
-        const tweetContent = `#Nowplaying ${nowPlaying.title} - ${nowPlaying.artist}\n${fixedUrl}`;
+        const tweetContent = `#NowPlaying ${nowPlaying.title} - ${nowPlaying.artist}\n${fixedUrl}`;
         const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
         console.log("ツイート内容:", tweetContent);
 
