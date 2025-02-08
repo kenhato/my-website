@@ -1,16 +1,24 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // ボタンクリックのイベント設定
-    document.getElementById('shuffleButton1').addEventListener('click', () => shuffleAndTweet('休憩なう'));
-    document.getElementById('shuffleButton2').addEventListener('click', () => shuffleAndTweet('お昼休憩なう'));
-    document.getElementById('shuffleButton3').addEventListener('click', () => shuffleAndTweet('夜休憩なう'));
-    document.getElementById('painLevelButton').addEventListener('click', showPainLevelDialog);
-    document.getElementById('nowPlayingButton').addEventListener('click', tweetNowPlaying);
-
+    document.getElementById('shuffleButton1').addEventListener('click', () => {
+        handleClickWithPopup(() => shuffleAndTweet('休憩なう'));
+    });
+    document.getElementById('shuffleButton2').addEventListener('click', () => {
+        handleClickWithPopup(() => shuffleAndTweet('お昼休憩なう'));
+    });
+    document.getElementById('shuffleButton3').addEventListener('click', () => {
+        handleClickWithPopup(() => shuffleAndTweet('夜休憩なう'));
+    });
+    document.getElementById('painLevelButton').addEventListener('click', () => {
+        handleClickWithPopup(showPainLevelDialog);
+    });
+    document.getElementById('nowPlayingButton').addEventListener('click', () => {
+        handleClickWithPopup(tweetNowPlaying);
+    });
     // ダイアログ内ボタンのイベント設定
     document.getElementById('tweetPainButton').addEventListener('click', tweetPainReport);
     document.getElementById('cancelPainButton').addEventListener('click', () => {
         document.getElementById('painLevelDialog').close();
-    });
+});
 
     // MusicKit初期化
     try {
@@ -27,6 +35,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error("MusicKit初期化中にエラー:", error);
     }
 });
+
+// 確率でポップアップを出す共通関数
+function handleClickWithPopup(callback) {
+    const randomValue = Math.random();
+    const popupChance = 0.05; // ポップアップ表示
+    if (randomValue < popupChance) {
+        alert("使ってくれてありがとう！");
+    }
+    callback();
+}
 
 // 文字をシャッフルしてツイート
 function shuffleAndTweet(originalString) {
