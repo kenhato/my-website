@@ -122,8 +122,11 @@ async function tweetNowPlaying() {
     const music = MusicKit.getInstance();
 
     try {
-        const musicUserToken = await music.authorize();
-
+        // 未認証ならauthorize、または強制的に再認証したいなら常に呼ぶ
+        if (!music.isAuthorized || !music.musicUserToken) {
+            console.log("再認証が必要なため、authorize()を呼び出します。");
+            await music.authorize();
+        }
         // Apple Music API を使って曲情報を取得
         const nowPlaying = await fetchNowPlayingSong(musicUserToken);
 
@@ -146,3 +149,7 @@ async function tweetNowPlaying() {
         alert("Apple Music の認証またはデータ取得に失敗しました。");
     }
 }
+
+
+
+
