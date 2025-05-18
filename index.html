@@ -28,6 +28,21 @@
         <button id="nowPlayingButton" class="button nowplaying"><span class="emoji">🎵</span>再生中の曲をツイート</button>
 
     </div>
+    
+    <!-- これはトークンが既にある人にだけJSで表示 -->
+    <div id="nowPlayingCard" class="nowplaying-card hidden">
+        <img id="albumImage" src="" alt="Album Art">
+        <div class="nowplaying-info">
+            <p>🎧 聴いてる曲：</p>
+            <strong id="songTitle">タイトル</strong><br>
+            <span id="artistName">アーティスト</span>
+        </div>
+        <button id="tweetNowPlaying" class="button nowplaying">この曲をツイートする！</button>
+    </div>
+
+    <div class="footer">
+        &copy; 2024 pinoken_
+    </div>
 
     <!-- 腹痛報告用ダイアログ -->
     <dialog id="painLevelDialog">
@@ -44,19 +59,6 @@
             <button type="button" id="cancelPainButton">キャンセル</button>
         </form>
     </dialog>
-
-    <div class="footer">
-        &copy; 2024 pinoken_
-    </div>
-    <!-- これはトークンが既にある人にだけJSで表示 -->
-    <div id="nowPlayingCard" class="nowplaying-card hidden">
-        <img id="albumImage" src="" alt="Album Art">
-        <div class="nowplaying-info">
-            <p>🎧 聴いてる曲：</p>
-            <strong id="songTitle">タイトル</strong><br>
-            <span id="artistName">アーティスト</span>
-        </div>
-        <button id="tweetNowPlaying" class="button nowplaying">この曲をツイートする！</button>
-    </div>
+    
 </body>
 </html>
