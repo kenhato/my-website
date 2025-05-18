@@ -169,6 +169,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("albumImage").src = nowPlaying.artworkUrl;
       document.getElementById("songTitle").textContent = nowPlaying.title;
       document.getElementById("artistName").textContent = nowPlaying.artist;
+      document.getElementById("nowPlayingCard").classList.remove("hidden");
       document.getElementById("tweetNowPlaying").onclick = () => {
         const tweetContent = `#NowPlaying ${nowPlaying.title} - ${nowPlaying.artist}\n${nowPlaying.url}`;
         window.location.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
