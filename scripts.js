@@ -76,12 +76,12 @@ function tweetPainReport() {
     document.getElementById("painLevelDialog").close();
 }
 
-// Apple Music API から曲を取得する関数
-async function fetchNowPlayingSong(musicUserToken) {
+async function fetchNowPlayingSong() {
     const music = MusicKit.getInstance(); 
-    const developerToken = music.developerToken; 
+    const developerToken = music.developerToken;
 
-    const fetchTrack = async (token) => {
+    const fetchTrack = async () => {
+        const token = music.musicUserToken;
         const response = await fetch("https://api.music.apple.com/v1/me/recent/played/tracks?limit=1", {
             method: "GET",
             headers: {
@@ -107,17 +107,16 @@ async function fetchNowPlayingSong(musicUserToken) {
     };
 
     try {
-        return await fetchTrack(musicUserToken);
+        return await fetchTrack();
     } catch (error) {
         console.warn("初回トークンで失敗:", error.message);
 
-        // 401 や 403 なら再認証してリトライ
         if (error.message.includes("401") || error.message.includes("403")) {
             try {
                 await music.unauthorize();
-                const refreshedToken = await music.authorize();
+                await music.authorize(); // トークンは自動で music.musicUserToken にセットされる
                 console.log("再認証成功、トークン再取得");
-                return await fetchTrack(refreshedToken);
+                return await fetchTrack();
             } catch (reauthError) {
                 console.error("再認証失敗:", reauthError);
                 alert("Apple Music の再認証に失敗しました。");
@@ -131,37 +130,30 @@ async function fetchNowPlayingSong(musicUserToken) {
     }
 }
 
-
-// 認証⇒fetchNowPlayingSongから取得した曲をツイートする関数
 async function tweetNowPlaying() {
     const music = MusicKit.getInstance();
 
     try {
-        const musicUserToken = await music.authorize();
+        await music.authorize(); 
 
-        // Apple Music API を使って曲情報を取得
-        const nowPlaying = await fetchNowPlayingSong(musicUserToken);
+        const nowPlaying = await fetchNowPlayingSong();
 
         if (!nowPlaying) {
             alert("現在再生中の曲がありません！");
             return;
         }
 
-         // `?i=` を `?&i=` に変換
-         const fixedUrl = nowPlaying.url.replace("?i=", "?&i=");
-
+        const fixedUrl = nowPlaying.url.replace("?i=", "?&i=");
         const tweetContent = `#NowPlaying ${nowPlaying.title} - ${nowPlaying.artist}\n${fixedUrl}`;
         const tweetUrlWeb = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
-        console.log("ツイート内容:", tweetContent);
 
-        // ツイートページにリダイレクト
+        console.log("ツイート内容:", tweetContent);
         window.location.href = tweetUrlWeb;
     } catch (err) {
         console.error("認証エラーまたは曲情報取得エラー:", err);
         alert("Apple Music の認証またはデータ取得に失敗しました。");
     }
 }
-
 
 
 
