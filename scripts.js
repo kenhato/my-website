@@ -103,7 +103,7 @@ async function fetchNowPlayingSong() {
             title: nowPlaying.name || "Unknown Title",
             artist: nowPlaying.artistName || "Unknown Artist",
             url: nowPlaying.url || "https://music.apple.com/",
-            artworkUrl: nowPlaying.artwork?.url.replace('{w}x{h}', '100x100') || ""
+            artworkUrl: nowPlaying.artwork?.url.replace('{w}x{h}', '500x500') || ""
         };
     };
 
