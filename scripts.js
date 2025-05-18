@@ -165,7 +165,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     const nowPlaying = await fetchNowPlayingSong(token);
     if (nowPlaying) {
-      document.getElementById("albumImage").src = nowPlaying.artworkUrl;
+      document.getElementById("albumImage").src = nowPlaying.artwork.url;
       document.getElementById("songTitle").textContent = nowPlaying.title;
       document.getElementById("artistName").textContent = nowPlaying.artist;
       document.getElementById("tweetNowPlaying").onclick = () => {
