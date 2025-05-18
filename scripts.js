@@ -155,5 +155,30 @@ async function tweetNowPlaying() {
     }
 }
 
+window.addEventListener("DOMContentLoaded", async () => {
+  const music = MusicKit.getInstance();
+
+  try {
+    if (!music.isAuthorized) return; // 認証済みでなければカード出さない
+
+    const token = await music.authorize(); // トークン取得（既に認証済みなら即返る）
+
+    const nowPlaying = await fetchNowPlayingSong(token);
+    if (nowPlaying) {
+      document.getElementById("albumImage").src = nowPlaying.artworkUrl;
+      document.getElementById("songTitle").textContent = nowPlaying.title;
+      document.getElementById("artistName").textContent = nowPlaying.artist;
+      document.getElementById("tweetNowPlaying").onclick = () => {
+        const tweetContent = `#NowPlaying ${nowPlaying.title} - ${nowPlaying.artist}\n${nowPlaying.url}`;
+        window.location.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetContent)}`;
+      };
+      document.getElementById("nowPlayingCard").classList.remove("hidden");
+    }
+  } catch (err) {
+    console.warn("再生中の曲取得スキップ：", err);
+  }
+});
+
+
 
 
