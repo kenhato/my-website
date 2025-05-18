@@ -78,15 +78,15 @@ function tweetPainReport() {
 
 // Apple Music API から曲を取得する関数
 async function fetchNowPlayingSong(musicUserToken) {
-    const music = MusicKit.getInstance(); // MusicKitインスタンス取得
+    const music = MusicKit.getInstance(); 
     const developerToken = music.developerToken; 
 
-    try {
+    const fetchTrack = async (token) => {
         const response = await fetch("https://api.music.apple.com/v1/me/recent/played/tracks?limit=1", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${developerToken}`,
-                "Music-User-Token": musicUserToken,
+                "Music-User-Token": token,
                 "Cache-Control": "no-cache"
             }
         });
@@ -96,26 +96,40 @@ async function fetchNowPlayingSong(musicUserToken) {
         }
 
         const data = await response.json();
-
-        // 直近に再生した曲の情報を取得
         const nowPlaying = data.data?.[0]?.attributes;
-        if (!nowPlaying) {
-            alert("現在再生中の曲が取得できませんでした。");
-            return null;
-        }
+        if (!nowPlaying) return null;
 
         return {
             title: nowPlaying.name || "Unknown Title",
             artist: nowPlaying.artistName || "Unknown Artist",
             url: nowPlaying.url || "https://music.apple.com/"
         };
+    };
 
+    try {
+        return await fetchTrack(musicUserToken);
     } catch (error) {
-        console.error("曲情報取得エラー:", error);
-        alert("曲情報の取得に失敗しました。");
-        return null;
+        console.warn("初回トークンで失敗:", error.message);
+
+        // 401 や 403 なら再認証してリトライ
+        if (error.message.includes("401") || error.message.includes("403")) {
+            try {
+                const refreshedToken = await music.authorize();
+                console.log("再認証成功、トークン再取得");
+                return await fetchTrack(refreshedToken);
+            } catch (reauthError) {
+                console.error("再認証失敗:", reauthError);
+                alert("Apple Music の再認証に失敗しました。");
+                return null;
+            }
+        } else {
+            console.error("その他のエラー:", error);
+            alert("曲情報の取得に失敗しました。");
+            return null;
+        }
     }
 }
+
 
 // 認証⇒fetchNowPlayingSongから取得した曲をツイートする関数
 async function tweetNowPlaying() {
