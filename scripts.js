@@ -102,7 +102,8 @@ async function fetchNowPlayingSong() {
         return {
             title: nowPlaying.name || "Unknown Title",
             artist: nowPlaying.artistName || "Unknown Artist",
-            url: nowPlaying.url || "https://music.apple.com/"
+            url: nowPlaying.url || "https://music.apple.com/",
+            artworkUrl: nowPlaying.artwork?.url.replace('{w}x{h}', '100x100') || ""
         };
     };
 
@@ -165,7 +166,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     const nowPlaying = await fetchNowPlayingSong(token);
     if (nowPlaying) {
-      document.getElementById("albumImage").src = nowPlaying.artwork.url;
+      document.getElementById("albumImage").src = nowPlaying.artworkUrl;
       document.getElementById("songTitle").textContent = nowPlaying.title;
       document.getElementById("artistName").textContent = nowPlaying.artist;
       document.getElementById("tweetNowPlaying").onclick = () => {
