@@ -114,7 +114,7 @@ async function fetchNowPlayingSong(musicUserToken) {
         // 401 や 403 なら再認証してリトライ
         if (error.message.includes("401") || error.message.includes("403")) {
             try {
-                console.log("あ");
+                await music.unauthorize();
                 const refreshedToken = await music.authorize();
                 console.log("再認証成功、トークン再取得");
                 return await fetchTrack(refreshedToken);
