@@ -20,16 +20,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('painLevelDialog').close();
 });
 
-    // MusicKit初期化
-    try {
-        console.log("MusicKit初期化を開始...");
-        await MusicKit.configure({
-            developerToken: "eyJhbGciOiJFUzI1NiIsImtpZCI6Ik5GSjY1MjM3VzgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiI4V1czTlFQN0FWIiwiZXhwIjoxNzUzOTk5Mzk4LCJpYXQiOjE3MzgzNjA5OTh9.xxXeM53b6eOaRkjkGukgmjkDupEXGpnVGfwutYehW3eHTkZ6BsqM1yAq8RObNJs5dh_6dALFtgb9KWxFjQwAAg", // トークンを設定
-            app: {
-                name: "TweetGenerator",
-                build: "1.0.0"
-            }
-        });
+try {
+  console.log("トークン取得中…");
+  const res = await fetch("https://llgctsrfu5.execute-api.ap-southeast-2.amazonaws.com/generate_JWT_token");
+  const { token } = await res.json();
+
+  console.log("MusicKit初期化中…");
+  await MusicKit.configure({
+    developerToken: token,
+    app: {
+      name: "TweetGenerator",
+      build: "1.0.0"
+    }
+  });
         console.log("MusicKit初期化成功！");
     } catch (error) {
         console.error("MusicKit初期化中にエラー:", error);
