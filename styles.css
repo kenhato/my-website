@@ -138,3 +138,20 @@ button[type="button"]:hover {
 .hidden {
   display: none;
 }
+
+body.happyberry-mode {
+  background: linear-gradient(135deg, #fceabb, #f8b500);
+  animation: shimmer 6s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.happyberry-mode .button {
+  background: linear-gradient(45deg, #ffd700, #fff8dc);
+  color: #5c3900;
+  box-shadow: 0 0 20px #ffd700aa;
+}
+

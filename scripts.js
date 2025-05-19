@@ -185,16 +185,26 @@ async function tweetNowPlaying() {
     }
 }
 
+
+// 曲表示用の関数。はっぴーべりーはっぴーの場合出し分け
+const SPECIAL_SONG = "はっぴーべりーはっぴー";
+const SPECIAL_ARTIST = "ピノキオピー";
+
 async function ShowRecentSong() {
   const music = MusicKit.getInstance();
 
   try {
-    if (!music.isAuthorized) return; // 認証済みでなければカード出さない
+    if (!music.isAuthorized) return;
 
-    const token = await music.authorize(); // トークン取得（既に認証済みなら即返る）
+    const token = await music.authorize();
 
     const nowPlaying = await fetchNowPlayingSong(token);
     if (nowPlaying) {
+
+      if (nowPlaying.title.includes(SPECIAL_SONG) && nowPlaying.artist.includes(SPECIAL_ARTIST)) {
+        document.body.classList.add("happyberry-mode");
+      }
+
       document.getElementById("albumImage").src = nowPlaying.artworkUrl;
       document.getElementById("songTitle").textContent = nowPlaying.title;
       document.getElementById("artistName").textContent = nowPlaying.artist;
@@ -209,6 +219,7 @@ async function ShowRecentSong() {
     console.warn("再生中の曲取得スキップ：", err);
   }
 }
+
 
 
 
