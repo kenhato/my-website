@@ -1,46 +1,69 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    document.getElementById('shuffleButton1').addEventListener('click', () => {
-        handleClickWithPopup(() => shuffleAndTweet('休憩なう'));
-    });
-    document.getElementById('shuffleButton2').addEventListener('click', () => {
-        handleClickWithPopup(() => shuffleAndTweet('お昼休憩なう'));
-    });
-    document.getElementById('shuffleButton3').addEventListener('click', () => {
-        handleClickWithPopup(() => shuffleAndTweet('夜休憩なう'));
-    });
-    document.getElementById('painLevelButton').addEventListener('click', () => {
-        handleClickWithPopup(showPainLevelDialog);
-    });
-    document.getElementById('nowPlayingButton').addEventListener('click', () => {
-        handleClickWithPopup(tweetNowPlaying);
-    });
-    // ダイアログ内ボタンのイベント設定
-    document.getElementById('tweetPainButton').addEventListener('click', tweetPainReport);
-    document.getElementById('cancelPainButton').addEventListener('click', () => {
-        document.getElementById('painLevelDialog').close();
-});
-
-try {
-  console.log("トークン取得中…");
-  const res = await fetch("https://llgctsrfu5.execute-api.ap-southeast-2.amazonaws.com/generate_JWT_token");
-  const { token } = await res.json();
-
-  console.log("MusicKit初期化中…");
-  await MusicKit.configure({
-    developerToken: token,
-    app: {
-      name: "TweetGenerator",
-      build: "1.0.0"
-    }
+  // ボタンイベント登録
+  document.getElementById('shuffleButton1').addEventListener('click', () => {
+    handleClickWithPopup(() => shuffleAndTweet('休憩なう'));
   });
-        console.log("MusicKit初期化成功！");
+  document.getElementById('shuffleButton2').addEventListener('click', () => {
+    handleClickWithPopup(() => shuffleAndTweet('お昼休憩なう'));
+  });
+  document.getElementById('shuffleButton3').addEventListener('click', () => {
+    handleClickWithPopup(() => shuffleAndTweet('夜休憩なう'));
+  });
+  document.getElementById('painLevelButton').addEventListener('click', () => {
+    handleClickWithPopup(showPainLevelDialog);
+  });
+  document.getElementById('nowPlayingButton').addEventListener('click', () => {
+    handleClickWithPopup(tweetNowPlaying);
+  });
+  document.getElementById('tweetPainButton').addEventListener('click', tweetPainReport);
+  document.getElementById('cancelPainButton').addEventListener('click', () => {
+    document.getElementById('painLevelDialog').close();
+  });
 
-        await ShowRecentSong();
-
-    } catch (error) {
-        console.error("MusicKit初期化中にエラー:", error);
-    }
+  // MusicKit初期化
+  await initMusicKitWithCache();
 });
+
+
+// ↓ ここはdocument.addEventListenerの外に定義！
+const TOKEN_KEY = "appleDevToken";
+const EXPIRY_KEY = "appleDevTokenExpiry";
+const THREE_MONTHS_MS = 90 * 24 * 60 * 60 * 1000;
+
+async function initMusicKitWithCache() {
+  try {
+    let token = localStorage.getItem(TOKEN_KEY);
+    const expiry = Number(localStorage.getItem(EXPIRY_KEY));
+    const now = Date.now();
+
+    if (!token || !expiry || now > expiry) {
+      console.log("🔄 トークン未取得 or 有効期限切れ → 新規取得");
+      const res = await fetch("https://llgctsrfu5.execute-api.ap-southeast-2.amazonaws.com/generate_JWT_token");
+      const data = await res.json();
+      token = data.token;
+
+      localStorage.setItem(TOKEN_KEY, token);
+      localStorage.setItem(EXPIRY_KEY, (now + THREE_MONTHS_MS).toString());
+    } else {
+      console.log("✅ トークンキャッシュから取得（有効）");
+    }
+
+    console.log("🎶 MusicKit初期化中…");
+    await MusicKit.configure({
+      developerToken: token,
+      app: {
+        name: "TweetGenerator",
+        build: "1.0.0"
+      }
+    });
+
+    console.log("✅ MusicKit初期化成功！");
+    await ShowRecentSong();
+
+  } catch (error) {
+    console.error("MusicKit初期化中にエラー:", error);
+  }
+}
 
 // 確率でポップアップを出す共通関数
 function handleClickWithPopup(callback) {
