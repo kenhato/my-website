@@ -203,6 +203,7 @@ async function ShowRecentSong() {
 
       if (nowPlaying.title.includes(SPECIAL_SONG) && nowPlaying.artist.includes(SPECIAL_ARTIST)) {
         document.body.classList.add("happyberry-mode");
+        document.getElementById("sparkleEffect").style.display = "block";
       }
 
       document.getElementById("albumImage").src = nowPlaying.artworkUrl;
