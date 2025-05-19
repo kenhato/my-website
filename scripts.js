@@ -164,6 +164,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   try {
     if (!music.isAuthorized) return; // 認証済みでなければカード出さない
+    console.log("a")
 
     const token = await music.authorize(); // トークン取得（既に認証済みなら即返る）
 
