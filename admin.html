@@ -10,19 +10,19 @@
   <div class="container">
     <h1>開発者用</h1>
 
-    <form id="commentForm">
+    <form id="loginForm">
       <label for="username">ID</label><br>
       <input type="text" id="userid" name="userid"><br><br>
 
-      <label for="message">Password</label><br>
-      <textarea id="password" name="password" row="5"></textarea><br><br>
+      <label for="password">Password</label><br>
+      <input type="password" id="password" name="password" row="5"><br><br>
 
-      <button type="submit">送信する</button>
+      <button type="submit">ログイン</button>
     </form>
   </div>
 
   <script>
-  document.getElementById("commentForm").addEventListener("submit", async function (e) {
+  document.getElementById("loginForm").addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const userid = document.getElementById("userid").value;
@@ -52,6 +52,5 @@
     }
   });
   </script>
-  <button class="button lunch" onclick="window.location.href='index.html'">トップへ戻る</button>
 </body>
 </html>
