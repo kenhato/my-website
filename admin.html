@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ログイン</title>
+  <link rel="stylesheet" href="styles.css"> <!-- index.html と共通のCSS -->
+</head>
+<body>
+  <div class="container">
+    <h1>開発者用</h1>
+
+    <form id="commentForm">
+      <label for="username">ID</label><br>
+      <input type="text" id="userid" name="userid"><br><br>
+
+      <label for="message">Password</label><br>
+      <textarea id="password" name="password" row="5"></textarea><br><br>
+
+      <button type="submit">送信する</button>
+    </form>
+  </div>
+
+  <script>
+  document.getElementById("commentForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const userid = document.getElementById("userid").value;
+    const password = document.getElementById("password").value;
+
+    try {
+      const response = await fetch("https://d9tg4wq0z6.execute-api.ap-southeast-2.amazonaws.com/restNowDB_comment_insert", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          userid: userid,
+          password: password
+        })
+      });
+
+      if (response.ok) {
+        window.location.href = "view.html";
+      } else {
+        const errorText = await response.text();
+        alert("ログインに失敗しました: " + errorText);
+      }
+    } catch (error) {
+      console.error("送信エラー:", error);
+      alert("エラーが発生しました。通信環境を確認してください。");
+    }
+  });
+  </script>
+  <button class="button lunch" onclick="window.location.href='index.html'">トップへ戻る</button>
+</body>
+</html>
