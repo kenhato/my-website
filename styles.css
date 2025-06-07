@@ -214,5 +214,12 @@ form button[type="submit"]:hover {
   transform: translateY(-2px);
 }
 
+label {
+  font-weight: bold;
+  color: #ff9f1c;
+  margin-top: 2rem;
+  font-size: 1.0rem;
+}
+
 
 
