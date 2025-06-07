@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>コメント送信</title>
+  <link rel="stylesheet" href="styles.css"> <!-- index.html と共通のCSS -->
+</head>
+<body>
+  <div class="container">
+    <h1>開発者へのご意見・ご要望</h1>
+
+    <form id="commentForm">
+      <label for="username">ユーザー名（任意）</label><br>
+      <input type="text" id="username" name="username" placeholder="入力しなくてもOK"><br><br>
+
+      <label for="message">コメント</label><br>
+      <textarea id="message" name="message" rows="5" required placeholder="コメントを入力してください"></textarea><br><br>
+
+      <button type="submit">送信する</button>
+    </form>
+  </div>
+
+  <script>
+  document.getElementById("commentForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const username = document.getElementById("username").value;
+    const message = document.getElementById("message").value;
+
+    // 必須チェック（必要なら）
+    if (!message.trim()) {
+      alert("コメントを入力してください！");
+      return;
+    }
+
+    try {
+      const response = await fetch("https://d9tg4wq0z6.execute-api.ap-southeast-2.amazonaws.com/restNowDB_comment_insert", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: username,
+          message: message
+        })
+      });
+
+      if (response.ok) {
+        window.location.href = "complete.html";
+      } else {
+        const errorText = await response.text();
+        alert("送信に失敗しました: " + errorText);
+      }
+    } catch (error) {
+      console.error("送信エラー:", error);
+      alert("エラーが発生しました。通信環境を確認してください。");
+    }
+  });
+  </script>
+</body>
+</html>
